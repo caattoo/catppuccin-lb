@@ -361,7 +361,45 @@
 </div>
 
 <style lang="scss">
-    @use "../../colors.scss" as *;
+  @use "../../colors.scss" as *;
+
+  .module {
+    position: relative;
+
+    .name {
+      cursor: pointer;
+      transition: ease background 0.2s,
+      ease color 0.2s,
+      ease text-shadow 0.2s;
+
+      color: $overlay1;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      position: relative;
+      padding: 10px;
+
+      &.highlight::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100% - 4px);
+        height: calc(100% - 4px);
+        border: solid 2px $accent;
+      }
+
+      &:hover {
+        background: rgba($base, 0.85);
+        color: $text;
+      }
+
+      &.enabled {
+        background: linear-gradient(to right, $flamingo, $mauve);
+        text-shadow: 0px 0px 8px $base;
+        color: $base;
+      }
+    }
 
     .module {
         position: relative;

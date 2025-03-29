@@ -259,11 +259,73 @@
 </div>
 
 <style lang="scss">
-    @use "../../colors.scss" as *;
+  @use "../../colors.scss" as *;
 
-    .panel {
-        border-radius: 5px;
-        width: 250px;
+  .panel {
+    border-radius: 16px;
+    width: 250px;
+    position: absolute;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba($base, 0.5);
+    will-change: transform;
+    transition: none;
+    user-select: none;
+  }
+
+  .title {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    align-items: center;
+    column-gap: 6px;
+    background-color: rgba($mantle, 0.9);
+    text-align: center;
+    
+    padding: 10px 15px;
+    cursor: grab;
+
+    .category {
+        background: linear-gradient(to right, $flamingo, $mauve, $blue);
+        background-clip: text;
+        color: transparent;
+        font-weight: 900;
+    }
+  }
+
+  .modules {
+    max-height: 545px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: rgba($base, 0.8);
+  }
+
+  .modules::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .expand-toggle {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    .icon {
+      height: 12px;
+      width: 12px;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        background-color: white;
+        transition: transform 0.4s ease-out;
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        margin-left: -1px;
+      }
+
+      &::after {
+        content: "";
         position: absolute;
         overflow: hidden;
         box-shadow: 0 0 10px rgba($base, 0.5);
