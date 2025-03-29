@@ -1,15 +1,33 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-    import {getGameWindow, getModules, getModuleSettings, setTyping} from "../../integration/rest";
-    import {groupByCategory} from "../../integration/util";
-    import type {ConfigurableSetting, GroupedModules, Module, TogglableSetting} from "../../integration/types";
+    import { onMount } from "svelte";
+    import {
+        getGameWindow,
+        getModules,
+        getModuleSettings,
+        setTyping,
+    } from "../../integration/rest";
+    import { groupByCategory } from "../../integration/util";
+    import type {
+        ConfigurableSetting,
+        GroupedModules,
+        Module,
+        TogglableSetting,
+    } from "../../integration/types";
     import Panel from "./Panel.svelte";
     import Search from "./Search.svelte";
     import Description from "./Description.svelte";
-    import {fade} from "svelte/transition";
-    import {listen} from "../../integration/ws";
-    import type {ClickGuiValueChangeEvent, ScaleFactorChangeEvent} from "../../integration/events";
-    import {gridSize, scaleFactor, showGrid, snappingEnabled} from "./clickgui_store";
+    import { fade } from "svelte/transition";
+    import { listen } from "../../integration/ws";
+    import type {
+        ClickGuiValueChangeEvent,
+        ScaleFactorChangeEvent,
+    } from "../../integration/events";
+    import {
+        gridSize,
+        scaleFactor,
+        showGrid,
+        snappingEnabled,
+    } from "./clickgui_store";
 
     let categories: GroupedModules = {};
     let modules: Module[] = [];
@@ -20,12 +38,20 @@
     }
 
     function applyValues(configurable: ConfigurableSetting) {
-        clickGuiScaleFactor = configurable.value.find(v => v.name === "Scale")?.value as number ?? 1;
+        clickGuiScaleFactor =
+            (configurable.value.find((v) => v.name === "Scale")
+                ?.value as number) ?? 1;
 
-        const snappingValue = configurable.value.find(v => v.name === "Snapping") as TogglableSetting;
+        const snappingValue = configurable.value.find(
+            (v) => v.name === "Snapping",
+        ) as TogglableSetting;
 
-        $snappingEnabled = snappingValue?.value.find(v => v.name === "Enabled")?.value as boolean ?? true;
-        $gridSize = snappingValue?.value.find(v => v.name === "GridSize")?.value as number ?? 10;
+        $snappingEnabled =
+            (snappingValue?.value.find((v) => v.name === "Enabled")
+                ?.value as boolean) ?? true;
+        $gridSize =
+            (snappingValue?.value.find((v) => v.name === "GridSize")
+                ?.value as number) ?? 10;
     }
 
     onMount(async () => {
@@ -50,34 +76,43 @@
     });
 </script>
 
-<div class="clickgui" class:grid={$showGrid} transition:fade|global={{duration: 200}}
-     style="transform: scale({$scaleFactor * 50}%); width: {2 / $scaleFactor * 100}vw; height: {2 / $scaleFactor * 100}vh;
-     background-size: {$gridSize}px {$gridSize}px;">
-    <Description/>
-    <Search modules={structuredClone(modules)}/>
+<div
+    class="clickgui"
+    class:grid={$showGrid}
+    transition:fade|global={{ duration: 200 }}
+    style="transform: scale({$scaleFactor * 50}%); width: {(2 / $scaleFactor) *
+        100}vw; height: {(2 / $scaleFactor) * 100}vh;
+     background-size: {$gridSize}px {$gridSize}px;"
+>
+    <Description />
+    <Search modules={structuredClone(modules)} />
 
     {#each Object.entries(categories) as [category, modules], panelIndex}
-        <Panel {category} {modules} {panelIndex}/>
+        <Panel {category} {modules} {panelIndex} />
     {/each}
 </div>
 
 <style lang="scss">
-  @use "../../colors.scss" as *;
+    @use "../../colors.scss" as *;
 
-  $GRID_SIZE: 10px;
+    $GRID_SIZE: 10px;
 
-  .clickgui {
-    background-color: rgba($base, 0.6);
-    overflow: hidden;
-    position: absolute;
-    will-change: opacity;
-    transform-origin: top left;
-    left: 0;
-    top: 0;
+    .clickgui {
+        background-color: rgba($base, 0.6);
+        overflow: hidden;
+        position: absolute;
+        will-change: opacity;
+        transform-origin: top left;
+        left: 0;
+        top: 0;
 
-    &.grid {
-      background-image: linear-gradient(to right, $accent 1px, transparent 1px),
-      linear-gradient(to bottom, $accent 1px, transparent 1px);
+        &.grid {
+            background-image: linear-gradient(
+                    to right,
+                    $accent 1px,
+                    transparent 1px
+                ),
+                linear-gradient(to bottom, $accent 1px, transparent 1px);
+        }
     }
-  }
 </style>
